@@ -96,7 +96,7 @@ export default function GroupsPage({ loaderData }: { loaderData: Awaited<ReturnT
             ))}
           </SelectInput>
           <SelectInput name="guide_id">
-            <option value="">暂不指定导游</option>
+            <option value="none">暂不指定导游</option>
             {guides.map((guide) => (
               <option key={guide.id} value={guide.id}>
                 {guide.name}

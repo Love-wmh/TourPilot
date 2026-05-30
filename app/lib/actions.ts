@@ -11,7 +11,7 @@ export function numberValue(value: FormDataEntryValue | undefined, fallback = 0)
 }
 
 export function optionalNumberValue(value: FormDataEntryValue | undefined) {
-  if (value === undefined || value === '') return null
+  if (value === undefined || value === '' || value === 'none') return null
   const parsed = Number(value)
   return Number.isFinite(parsed) ? parsed : null
 }

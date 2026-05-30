@@ -12,14 +12,18 @@ import {
   TextInput,
 } from '~/components/page'
 import { Button } from '~/components/ui/button'
-import { groups, guides } from '~/data'
+import { loadGuidesData } from '~/lib/data-loader'
 
 export function meta() {
   return [{ title: '导游管理' }]
 }
 
-export default function GuidesPage() {
-  const guideGroups = groups.filter((group) => group.guide_name)
+export async function clientLoader() {
+  return loadGuidesData()
+}
+
+export default function GuidesPage({ loaderData }: { loaderData: Awaited<ReturnType<typeof clientLoader>> }) {
+  const { guides, groups: guideGroups } = loaderData
 
   return (
     <>

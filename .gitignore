@@ -9,3 +9,5 @@
 # IDE files
 .idea/
 .vscode/
+
+.venv

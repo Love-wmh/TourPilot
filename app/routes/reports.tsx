@@ -8,13 +8,19 @@ import {
   TableRow,
   Td,
 } from '~/components/page'
-import { customerRank, monthlyGroups, profit, reportCards, routeHot } from '~/data'
+import { loadReportsData } from '~/lib/data-loader'
 
 export function meta() {
   return [{ title: '统计报表' }]
 }
 
-export default function ReportsPage() {
+export async function clientLoader() {
+  return loadReportsData()
+}
+
+export default function ReportsPage({ loaderData }: { loaderData: Awaited<ReturnType<typeof clientLoader>> }) {
+  const { report_cards: reportCards, monthly_groups: monthlyGroups, route_hot: routeHot, customer_rank: customerRank, profit } = loaderData
+
   return (
     <>
       <PageHeader

@@ -13,13 +13,20 @@ import {
   TextInput,
 } from '~/components/page'
 import { Button } from '~/components/ui/button'
-import { currentUser, roleSummary, users } from '~/data'
+import { loadUsersData } from '~/lib/data-loader'
 
 export function meta() {
   return [{ title: '用户与角色管理' }]
 }
 
-export default function UsersPage() {
+export async function clientLoader() {
+  return loadUsersData()
+}
+
+export default function UsersPage({ loaderData }: { loaderData: Awaited<ReturnType<typeof clientLoader>> }) {
+  const { users, role_summary: roleSummary } = loaderData
+  const currentUser = users[0]
+
   return (
     <>
       <PageHeader

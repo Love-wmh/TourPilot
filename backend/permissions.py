@@ -1,0 +1,61 @@
+ROLE_PERMISSIONS = {
+    "管理员": {
+        "index",
+        "users",
+        "delete_user",
+        "customers",
+        "delete_customer",
+        "routes",
+        "delete_route",
+        "guides",
+        "delete_guide",
+        "groups",
+        "delete_group",
+        "cancel_group",
+        "change_guide",
+        "orders",
+        "delete_order",
+        "cancel_order",
+        "expenses",
+        "delete_expense",
+        "reports",
+    },
+    "销售": {
+        "index",
+        "customers",
+        "delete_customer",
+        "orders",
+        "delete_order",
+        "cancel_order",
+        "reports",
+    },
+    "计调": {
+        "index",
+        "routes",
+        "delete_route",
+        "guides",
+        "delete_guide",
+        "groups",
+        "delete_group",
+        "cancel_group",
+        "change_guide",
+        "reports",
+    },
+    "财务": {
+        "index",
+        "orders",
+        "expenses",
+        "delete_expense",
+        "reports",
+    },
+    "导游": {
+        "index",
+        "guides",
+        "groups",
+        "reports",
+    },
+}
+
+
+def get_permissions(role):
+    return sorted(ROLE_PERMISSIONS.get(role, set()))

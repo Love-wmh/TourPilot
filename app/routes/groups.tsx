@@ -14,20 +14,18 @@ import {
   TextInput,
 } from '~/components/page'
 import { Button } from '~/components/ui/button'
-import { groups, guides, routes } from '~/data'
+import { loadGroupsData } from '~/lib/data-loader'
 
 export function meta() {
   return [{ title: '团队管理' }]
 }
 
-export default function GroupsPage() {
-  const statusSummary = Array.from(new Set(groups.map((group) => group.status))).map((status) => ({
-    status,
-    group_count: groups.filter((group) => group.status === status).length,
-    people_count: groups
-      .filter((group) => group.status === status)
-      .reduce((total, group) => total + group.total_people, 0),
-  }))
+export async function clientLoader() {
+  return loadGroupsData()
+}
+
+export default function GroupsPage({ loaderData }: { loaderData: Awaited<ReturnType<typeof clientLoader>> }) {
+  const { groups, routes, guides, status_summary: statusSummary } = loaderData
 
   return (
     <>

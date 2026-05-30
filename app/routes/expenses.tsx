@@ -14,28 +14,19 @@ import {
   TextInput,
 } from '~/components/page'
 import { Button } from '~/components/ui/button'
-import { expenses, groups } from '~/data'
+import { loadExpensesData } from '~/lib/data-loader'
 
 export function meta() {
   return [{ title: '费用管理' }]
 }
 
-export default function ExpensesPage() {
+export async function clientLoader() {
+  return loadExpensesData()
+}
+
+export default function ExpensesPage({ loaderData }: { loaderData: Awaited<ReturnType<typeof clientLoader>> }) {
+  const { expenses, groups, expense_summary: expenseSummary } = loaderData
   const totalExpense = expenses.reduce((total, expense) => total + expense.amount, 0)
-  const expenseSummary = Array.from(
-    new Set(expenses.map((expense) => `${expense.destination}-${expense.expense_type}`))
-  ).map((key) => {
-    const [destination, expense_type] = key.split('-')
-    return {
-      destination,
-      expense_type,
-      total_amount: expenses
-        .filter(
-          (expense) => expense.destination === destination && expense.expense_type === expense_type
-        )
-        .reduce((total, expense) => total + expense.amount, 0),
-    }
-  })
 
   return (
     <>

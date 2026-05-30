@@ -12,13 +12,19 @@ import {
   TextInput,
 } from '~/components/page'
 import { Button } from '~/components/ui/button'
-import { customers, orders } from '~/data'
+import { loadCustomersData } from '~/lib/data-loader'
 
 export function meta() {
   return [{ title: '客户信息管理' }]
 }
 
-export default function CustomersPage() {
+export async function clientLoader() {
+  return loadCustomersData()
+}
+
+export default function CustomersPage({ loaderData }: { loaderData: Awaited<ReturnType<typeof clientLoader>> }) {
+  const { customers, orders } = loaderData
+
   return (
     <>
       <PageHeader

@@ -13,13 +13,19 @@ import {
   TextInput,
 } from '~/components/page'
 import { Button } from '~/components/ui/button'
-import { groups, routes } from '~/data'
+import { loadRoutesData } from '~/lib/data-loader'
 
 export function meta() {
   return [{ title: '旅游线路管理' }]
 }
 
-export default function RoutesPage() {
+export async function clientLoader() {
+  return loadRoutesData()
+}
+
+export default function RoutesPage({ loaderData }: { loaderData: Awaited<ReturnType<typeof clientLoader>> }) {
+  const { routes, groups } = loaderData
+
   return (
     <>
       <PageHeader

@@ -14,19 +14,21 @@ import {
   TextInput,
 } from '~/components/page'
 import { Button } from '~/components/ui/button'
-import { customers, groups, orders } from '~/data'
+import { loadOrdersData } from '~/lib/data-loader'
 
 export function meta() {
   return [{ title: '报名与订单管理' }]
 }
 
-export default function OrdersPage() {
+export async function clientLoader() {
+  return loadOrdersData()
+}
+
+export default function OrdersPage({ loaderData }: { loaderData: Awaited<ReturnType<typeof clientLoader>> }) {
+  const { orders, customers, groups, unpaid_orders: unpaidOrders } = loaderData
   const receivable = orders.reduce((total, order) => total + order.amount_receivable, 0)
   const paid = orders.reduce((total, order) => total + order.amount_paid, 0)
   const balance = orders.reduce((total, order) => total + order.balance, 0)
-  const unpaidOrders = orders.filter(
-    (order) => order.balance > 0 && order.order_status !== '已取消'
-  )
 
   return (
     <>

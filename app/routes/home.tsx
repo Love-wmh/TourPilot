@@ -12,7 +12,7 @@ import {
   Td,
   TableRow,
 } from '~/components/page'
-import { canAccess, counts, groups, orders } from '~/data'
+import { loadDashboardData } from '~/lib/data-loader'
 
 export function meta() {
   return [
@@ -72,11 +72,13 @@ const modules = [
   },
 ]
 
-export default function Home() {
-  const recentOrders = orders.slice(0, 5)
-  const groupAlerts = groups
-    .filter((group) => group.total_people < group.min_people || group.status === '待成团')
-    .slice(0, 5)
+export async function clientLoader() {
+  return loadDashboardData()
+}
+
+export default function Home({ loaderData }: { loaderData: Awaited<ReturnType<typeof clientLoader>> }) {
+  const { counts, recent_orders: recentOrders, group_alerts: groupAlerts, user } = loaderData
+  const canAccess = (permission: string) => user.permissions?.includes(permission as never) ?? true
 
   return (
     <>

@@ -47,7 +47,7 @@ export default function AppLayout() {
             <Landmark className="size-5" />
           </div>
           <div>
-            <p className="text-sm font-semibold leading-none">ClassTrack</p>
+            <p className="text-sm font-semibold leading-none">旅团通</p>
             <p className="mt-1 text-xs text-muted-foreground">旅行社团队管理</p>
           </div>
         </div>
@@ -101,7 +101,7 @@ export default function AppLayout() {
                 <Landmark className="size-5" />
               </div>
               <div>
-                <p className="text-sm font-semibold leading-none">ClassTrack</p>
+                <p className="text-sm font-semibold leading-none">旅团通</p>
                 <p className="mt-1 text-xs text-muted-foreground">旅行社团队管理</p>
               </div>
             </div>

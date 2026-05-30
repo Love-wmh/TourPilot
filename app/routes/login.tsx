@@ -16,7 +16,7 @@ export default function Login() {
           <div>
             <div className="inline-flex items-center gap-2 rounded-lg border bg-background px-3 py-2 text-sm font-medium">
               <Compass className="size-4" />
-              ClassTrack Operation Suite
+              旅团通运营平台
             </div>
             <h1 className="mt-8 max-w-xl text-4xl font-semibold tracking-tight text-foreground">
               旅行社团队管理系统

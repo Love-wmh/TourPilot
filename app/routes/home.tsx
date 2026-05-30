@@ -86,7 +86,7 @@ export default function Home() {
         description="集中掌握客户、线路、导游、团队、报名订单与费用数据，让销售、计调和财务协同更清晰。"
       />
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
         <StatCard label="客户" value={counts.customers} tone="blue" />
         <StatCard label="线路" value={counts.routes} tone="emerald" />
         <StatCard label="导游" value={counts.guides} tone="amber" />
@@ -94,21 +94,21 @@ export default function Home() {
         <StatCard label="订单" value={counts.orders} tone="rose" />
       </div>
 
-      <Card className="mt-6">
+      <Card className="mt-5">
         <SectionTitle title="常用功能" description="按当前角色展示可访问模块" />
-        <CardBody className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+        <CardBody className="grid gap-3 p-4 md:grid-cols-2 xl:grid-cols-4">
           {modules
             .filter((item) => canAccess(item.permission))
             .map((item) => (
               <Link
                 key={item.href}
                 to={item.href}
-                className="group rounded-xl border bg-background p-4 transition-colors hover:bg-muted/50"
+                className="group rounded-md border bg-background p-3.5 transition-colors hover:bg-muted/50"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div>
                     <h3 className="font-medium text-foreground">{item.label}</h3>
-                    <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                    <p className="mt-1.5 text-sm leading-6 text-muted-foreground">
                       {item.description}
                     </p>
                   </div>
@@ -119,7 +119,7 @@ export default function Home() {
         </CardBody>
       </Card>
 
-      <div className="mt-6 grid gap-6 xl:grid-cols-2">
+      <div className="mt-5 grid gap-5 xl:grid-cols-2">
         <Card>
           <SectionTitle title="近期订单" description="最新报名与付款状态" />
           <DataTable headers={['编号', '客户', '线路', '人数', '状态', '实收']}>
@@ -166,13 +166,13 @@ export default function Home() {
         </Card>
       </div>
 
-      <Card className="mt-6">
+      <Card className="mt-5">
         <SectionTitle title="业务流程" description="从客户登记到利润统计的闭环" />
-        <CardBody className="grid gap-3 md:grid-cols-3 xl:grid-cols-6">
+        <CardBody className="grid gap-3 p-4 md:grid-cols-3 xl:grid-cols-6">
           {['客户登记', '选择线路', '生成团队', '报名下单', '费用登记', '统计利润'].map(
             (step, index) => (
-              <div key={step} className="rounded-xl border bg-background p-4">
-                <div className="mb-3 flex size-8 items-center justify-center rounded-lg bg-muted">
+              <div key={step} className="rounded-md border bg-background p-3.5">
+                <div className="mb-3 flex size-7 items-center justify-center rounded-md bg-muted">
                   {index < 3 ? (
                     <CheckCircle2 className="size-4 text-emerald-500" />
                   ) : index === 3 ? (

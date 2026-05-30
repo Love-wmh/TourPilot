@@ -67,7 +67,7 @@ export default function UsersPage() {
         </DataTable>
       </Card>
 
-      <Card className="mt-6">
+      <Card className="mt-5">
         <SectionTitle title="角色账号统计" description="不同角色的账号数量和主要职责" />
         <DataTable headers={['角色', '账号数量', '主要职责']}>
           {roleSummary.map((item) => (

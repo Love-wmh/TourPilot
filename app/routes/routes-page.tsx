@@ -81,7 +81,7 @@ export default function RoutesPage() {
         </DataTable>
       </Card>
 
-      <Card className="mt-6">
+      <Card className="mt-5">
         <SectionTitle title="线路出团记录" description="查看线路对应的团队、导游与人数状态" />
         <DataTable headers={['线路', '出发日期', '返回日期', '导游', '人数', '状态']}>
           {groups.map((group) => (

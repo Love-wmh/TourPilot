@@ -11,7 +11,7 @@ export function meta() {
 export default function Login() {
   return (
     <main className="flex min-h-screen items-center justify-center bg-muted/30 p-6">
-      <section className="grid w-full max-w-5xl overflow-hidden rounded-2xl border bg-card shadow-sm lg:grid-cols-[1.05fr_0.95fr]">
+      <section className="grid w-full max-w-5xl overflow-hidden rounded-lg border bg-card shadow-sm lg:grid-cols-[1.05fr_0.95fr]">
         <div className="flex flex-col justify-between border-b bg-muted/40 p-8 lg:border-b-0 lg:border-r lg:p-10">
           <div>
             <div className="inline-flex items-center gap-2 rounded-lg border bg-background px-3 py-2 text-sm font-medium">
@@ -29,7 +29,7 @@ export default function Login() {
             {['多角色权限', '团队排期', '利润报表'].map((item) => (
               <div
                 key={item}
-                className="rounded-xl border bg-background p-4 text-sm font-medium text-muted-foreground"
+                className="rounded-md border bg-background p-3.5 text-sm font-medium text-muted-foreground"
               >
                 {item}
               </div>
@@ -69,7 +69,7 @@ export default function Login() {
                 <ArrowRight className="size-4" />
               </Button>
             </form>
-            <div className="mt-6 rounded-xl border bg-muted/50 p-4 text-sm leading-6 text-muted-foreground">
+            <div className="mt-5 rounded-md border bg-muted/50 p-4 text-sm leading-6 text-muted-foreground">
               可用账号：admin / sales / planner / finance / guide01，密码均为 123456
             </div>
           </CardContent>

@@ -38,17 +38,17 @@ export function PageHeader({
   action?: ReactNode
 }) {
   return (
-    <div className="mb-6 flex flex-col gap-4 border-b pb-6 md:flex-row md:items-end md:justify-between">
-      <div className="max-w-3xl space-y-2">
+    <div className="mb-5 flex flex-col gap-3 border-b pb-5 md:flex-row md:items-end md:justify-between">
+      <div className="max-w-3xl space-y-1.5">
         {eyebrow && (
           <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
             {eyebrow}
           </p>
         )}
-        <h1 className="text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
+        <h1 className="text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
           {title}
         </h1>
-        <p className="text-sm leading-6 text-muted-foreground md:text-base">{description}</p>
+        <p className="text-sm leading-6 text-muted-foreground">{description}</p>
       </div>
       {action}
     </div>
@@ -56,12 +56,14 @@ export function PageHeader({
 }
 
 export function Card({ children, className }: { children: ReactNode; className?: string }) {
-  return <ShadcnCard className={cn('bg-card/95 shadow-sm', className)}>{children}</ShadcnCard>
+  return (
+    <ShadcnCard className={cn('rounded-lg bg-card shadow-xs', className)}>{children}</ShadcnCard>
+  )
 }
 
 export function SectionTitle({ title, description }: { title: string; description?: string }) {
   return (
-    <CardHeader className="border-b pb-4">
+    <CardHeader className="gap-1 border-b px-4 py-3">
       <CardTitle>{title}</CardTitle>
       {description && <CardDescription>{description}</CardDescription>}
     </CardHeader>
@@ -100,15 +102,15 @@ export function StatCard({
   }
 
   return (
-    <ShadcnCard className="shadow-sm">
-      <CardContent className="flex items-start justify-between gap-4 p-4">
+    <ShadcnCard className="rounded-lg shadow-xs">
+      <CardContent className="flex items-start justify-between gap-3 p-4">
         <div>
           <p className="text-sm text-muted-foreground">{label}</p>
-          <strong className="mt-2 block text-2xl font-semibold tracking-tight text-foreground">
+          <strong className="mt-1.5 block text-2xl font-semibold tracking-tight text-foreground">
             {value}
           </strong>
         </div>
-        <span className={cn('size-2.5 rounded-full ring-4', tones[tone])} />
+        <span className={cn('size-2 rounded-full ring-[5px]', tones[tone])} />
       </CardContent>
     </ShadcnCard>
   )
@@ -116,7 +118,7 @@ export function StatCard({
 
 export function DataTable({ headers, children }: { headers: string[]; children: ReactNode }) {
   return (
-    <div className="mx-4 mb-4 overflow-hidden rounded-xl border bg-card">
+    <div className="mx-4 mb-4 overflow-hidden rounded-md border bg-card">
       <Table className="min-w-[760px]">
         <TableHeader>
           <TableRow className="bg-muted/50 hover:bg-muted/50">
@@ -138,7 +140,7 @@ export function DataTable({ headers, children }: { headers: string[]; children: 
 
 export function Td({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <TableCell className={cn('px-4 py-3 text-sm text-muted-foreground', className)}>
+    <TableCell className={cn('px-4 py-2.5 text-sm text-muted-foreground', className)}>
       {children}
     </TableCell>
   )

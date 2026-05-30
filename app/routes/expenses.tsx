@@ -45,7 +45,7 @@ export default function ExpensesPage() {
         description="登记团队支出、费用类型和说明，支持财务成本归集与利润核算。"
       />
 
-      <div className="mb-6 grid gap-4 sm:grid-cols-3">
+      <div className="mb-5 grid gap-3 sm:grid-cols-3">
         <StatCard label="总支出" value={`¥${totalExpense.toLocaleString()}`} tone="rose" />
         <StatCard label="费用记录" value={expenses.length} tone="blue" />
         <StatCard
@@ -103,7 +103,7 @@ export default function ExpensesPage() {
         </DataTable>
       </Card>
 
-      <Card className="mt-6">
+      <Card className="mt-5">
         <SectionTitle title="费用分类汇总" description="按线路和费用类型汇总支出" />
         <DataTable headers={['线路', '费用类型', '合计金额']}>
           {expenseSummary.map((item) => (

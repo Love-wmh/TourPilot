@@ -68,7 +68,7 @@ export default function GuidesPage() {
         </DataTable>
       </Card>
 
-      <Card className="mt-6">
+      <Card className="mt-5">
         <SectionTitle title="导游带团明细" description="展示导游当前和未来排团" />
         <DataTable headers={['导游', '线路', '出发日期', '返回日期', '团队人数', '团队状态']}>
           {guideGroups.map((group) => (

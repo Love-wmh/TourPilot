@@ -37,7 +37,7 @@ export default function GroupsPage() {
         description="管理线路团队、导游安排、成团人数与异常取消处理。"
       />
 
-      <div className="mb-6 grid gap-4 sm:grid-cols-3">
+      <div className="mb-5 grid gap-3 sm:grid-cols-3">
         {statusSummary.map((item, index) => (
           <StatCard
             key={item.status}
@@ -153,7 +153,7 @@ export default function GroupsPage() {
         </DataTable>
       </Card>
 
-      <Card className="mt-6">
+      <Card className="mt-5">
         <SectionTitle title="导游排团看板" description="快速查看导游、线路和未来排期" />
         <DataTable headers={['导游', '线路', '出发', '返回', '人数', '状态']}>
           {groups.map((group) => (

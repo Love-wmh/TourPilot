@@ -61,7 +61,7 @@ export default function CustomersPage() {
         </DataTable>
       </Card>
 
-      <Card className="mt-6">
+      <Card className="mt-5">
         <SectionTitle title="客户报名记录" description="跟踪客户出游线路、付款状态与余款" />
         <DataTable headers={['客户', '线路', '出发日期', '人数', '订单状态', '实收', '余款']}>
           {orders.map((order) => (

@@ -23,14 +23,14 @@ export default function ReportsPage() {
         description="从收入、支出、有效团队、余款、线路热度和客户消费维度掌握经营表现。"
       />
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard label="总实收" value={`¥${reportCards.income.toLocaleString()}`} tone="emerald" />
         <StatCard label="总支出" value={`¥${reportCards.expense.toLocaleString()}`} tone="rose" />
         <StatCard label="有效团队" value={reportCards.active_groups} tone="blue" />
         <StatCard label="待收余款" value={`¥${reportCards.unpaid.toLocaleString()}`} tone="amber" />
       </div>
 
-      <div className="mt-6 grid gap-6 xl:grid-cols-2">
+      <div className="mt-5 grid gap-5 xl:grid-cols-2">
         <Card>
           <SectionTitle title="月度出团统计" />
           <DataTable headers={['月份', '出团数']}>
@@ -86,7 +86,7 @@ export default function ReportsPage() {
         </Card>
       </div>
 
-      <Card className="mt-6">
+      <Card className="mt-5">
         <SectionTitle title="报表说明" description="帮助业务、计调和财务理解各指标用途" />
         <div className="grid gap-3 md:grid-cols-3">
           {[
@@ -99,7 +99,7 @@ export default function ReportsPage() {
           ].map((note) => (
             <div
               key={note}
-              className="rounded-xl border bg-background p-4 text-sm font-medium text-muted-foreground"
+              className="rounded-md border bg-background p-3.5 text-sm font-medium text-muted-foreground"
             >
               {note}
             </div>

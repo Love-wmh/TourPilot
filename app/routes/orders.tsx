@@ -36,7 +36,7 @@ export default function OrdersPage() {
         description="处理客户报名、收款、余款跟进与退团扣费异常流程。"
       />
 
-      <div className="mb-6 grid gap-4 sm:grid-cols-3">
+      <div className="mb-5 grid gap-3 sm:grid-cols-3">
         <StatCard label="应收金额" value={`¥${receivable.toLocaleString()}`} tone="blue" />
         <StatCard label="实收金额" value={`¥${paid.toLocaleString()}`} tone="emerald" />
         <StatCard label="待收余款" value={`¥${balance.toLocaleString()}`} tone="amber" />
@@ -159,7 +159,7 @@ export default function OrdersPage() {
         </DataTable>
       </Card>
 
-      <Card className="mt-6">
+      <Card className="mt-5">
         <SectionTitle title="待收余款订单" description="销售可据此进行催收跟进" />
         <DataTable headers={['订单', '客户', '线路', '应收', '实收', '余款']}>
           {unpaidOrders.map((order) => (

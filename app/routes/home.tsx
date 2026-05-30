@@ -1,7 +1,17 @@
 import { ArrowRight, CalendarClock, CheckCircle2, CircleAlert, UsersRound } from 'lucide-react'
 import { Link } from 'react-router'
 
-import { Badge, Card, DataTable, PageHeader, SectionTitle, StatCard } from '~/components/page'
+import {
+  Badge,
+  Card,
+  CardBody,
+  DataTable,
+  PageHeader,
+  SectionTitle,
+  StatCard,
+  Td,
+  TableRow,
+} from '~/components/page'
 import { canAccess, counts, groups, orders } from '~/data'
 
 export function meta() {
@@ -12,19 +22,61 @@ export function meta() {
 }
 
 const modules = [
-  { label: '客户信息管理', href: '/customers', permission: 'customers' as const, description: '客户档案、联系人与偏好' },
-  { label: '旅游线路管理', href: '/routes', permission: 'routes' as const, description: '价格、天数与线路状态' },
-  { label: '导游管理', href: '/guides', permission: 'guides' as const, description: '导游资源和带团明细' },
-  { label: '团队管理', href: '/groups', permission: 'groups' as const, description: '成团、排期和换导游' },
-  { label: '报名与订单管理', href: '/orders', permission: 'orders' as const, description: '报名、收款和退团' },
-  { label: '费用管理', href: '/expenses', permission: 'expenses' as const, description: '支出登记和分类汇总' },
-  { label: '统计报表', href: '/reports', permission: 'reports' as const, description: '收入、利润与排行' },
-  { label: '用户与角色管理', href: '/users', permission: 'users' as const, description: '账号与权限角色' },
+  {
+    label: '客户信息管理',
+    href: '/customers',
+    permission: 'customers' as const,
+    description: '客户档案、联系人与偏好',
+  },
+  {
+    label: '旅游线路管理',
+    href: '/routes',
+    permission: 'routes' as const,
+    description: '价格、天数与线路状态',
+  },
+  {
+    label: '导游管理',
+    href: '/guides',
+    permission: 'guides' as const,
+    description: '导游资源和带团明细',
+  },
+  {
+    label: '团队管理',
+    href: '/groups',
+    permission: 'groups' as const,
+    description: '成团、排期和换导游',
+  },
+  {
+    label: '报名与订单管理',
+    href: '/orders',
+    permission: 'orders' as const,
+    description: '报名、收款和退团',
+  },
+  {
+    label: '费用管理',
+    href: '/expenses',
+    permission: 'expenses' as const,
+    description: '支出登记和分类汇总',
+  },
+  {
+    label: '统计报表',
+    href: '/reports',
+    permission: 'reports' as const,
+    description: '收入、利润与排行',
+  },
+  {
+    label: '用户与角色管理',
+    href: '/users',
+    permission: 'users' as const,
+    description: '账号与权限角色',
+  },
 ]
 
 export default function Home() {
   const recentOrders = orders.slice(0, 5)
-  const groupAlerts = groups.filter((group) => group.total_people < group.min_people || group.status === '待成团').slice(0, 5)
+  const groupAlerts = groups
+    .filter((group) => group.total_people < group.min_people || group.status === '待成团')
+    .slice(0, 5)
 
   return (
     <>
@@ -44,21 +96,27 @@ export default function Home() {
 
       <Card className="mt-6">
         <SectionTitle title="常用功能" description="按当前角色展示可访问模块" />
-        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+        <CardBody className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
           {modules
             .filter((item) => canAccess(item.permission))
             .map((item) => (
-              <Link key={item.href} to={item.href} className="group rounded-3xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:border-slate-300 hover:shadow-xl">
+              <Link
+                key={item.href}
+                to={item.href}
+                className="group rounded-xl border bg-background p-4 transition-colors hover:bg-muted/50"
+              >
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <h3 className="font-semibold text-slate-950">{item.label}</h3>
-                    <p className="mt-2 text-sm leading-6 text-slate-500">{item.description}</p>
+                    <h3 className="font-medium text-foreground">{item.label}</h3>
+                    <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                      {item.description}
+                    </p>
                   </div>
-                  <ArrowRight className="size-5 text-slate-300 transition group-hover:translate-x-1 group-hover:text-slate-950" />
+                  <ArrowRight className="size-4 text-muted-foreground transition group-hover:translate-x-1 group-hover:text-foreground" />
                 </div>
               </Link>
             ))}
-        </div>
+        </CardBody>
       </Card>
 
       <div className="mt-6 grid gap-6 xl:grid-cols-2">
@@ -66,14 +124,26 @@ export default function Home() {
           <SectionTitle title="近期订单" description="最新报名与付款状态" />
           <DataTable headers={['编号', '客户', '线路', '人数', '状态', '实收']}>
             {recentOrders.map((order) => (
-              <tr key={order.id}>
-                <td className="px-4 py-3 font-medium">#{order.id}</td>
-                <td className="px-4 py-3">{order.customer_name}</td>
-                <td className="px-4 py-3">{order.destination}</td>
-                <td className="px-4 py-3">{order.people_count}</td>
-                <td className="px-4 py-3"><Badge tone={order.order_status === '已取消' ? 'red' : order.order_status === '已支付' ? 'green' : 'amber'}>{order.order_status}</Badge></td>
-                <td className="px-4 py-3">¥{order.amount_paid.toLocaleString()}</td>
-              </tr>
+              <TableRow key={order.id}>
+                <Td className="font-medium text-foreground">#{order.id}</Td>
+                <Td>{order.customer_name}</Td>
+                <Td>{order.destination}</Td>
+                <Td>{order.people_count}</Td>
+                <Td>
+                  <Badge
+                    tone={
+                      order.order_status === '已取消'
+                        ? 'red'
+                        : order.order_status === '已支付'
+                          ? 'green'
+                          : 'amber'
+                    }
+                  >
+                    {order.order_status}
+                  </Badge>
+                </Td>
+                <Td>¥{order.amount_paid.toLocaleString()}</Td>
+              </TableRow>
             ))}
           </DataTable>
         </Card>
@@ -82,13 +152,15 @@ export default function Home() {
           <SectionTitle title="待处理团队" description="人数不足或待成团提醒" />
           <DataTable headers={['团队', '线路', '人数', '最低', '状态']}>
             {groupAlerts.map((group) => (
-              <tr key={group.id}>
-                <td className="px-4 py-3 font-medium">#{group.id}</td>
-                <td className="px-4 py-3">{group.destination}</td>
-                <td className="px-4 py-3">{group.total_people}</td>
-                <td className="px-4 py-3">{group.min_people}</td>
-                <td className="px-4 py-3"><Badge tone="amber">{group.status}</Badge></td>
-              </tr>
+              <TableRow key={group.id}>
+                <Td className="font-medium text-foreground">#{group.id}</Td>
+                <Td>{group.destination}</Td>
+                <Td>{group.total_people}</Td>
+                <Td>{group.min_people}</Td>
+                <Td>
+                  <Badge tone="amber">{group.status}</Badge>
+                </Td>
+              </TableRow>
             ))}
           </DataTable>
         </Card>
@@ -96,16 +168,24 @@ export default function Home() {
 
       <Card className="mt-6">
         <SectionTitle title="业务流程" description="从客户登记到利润统计的闭环" />
-        <div className="grid gap-3 md:grid-cols-3 xl:grid-cols-6">
-          {['客户登记', '选择线路', '生成团队', '报名下单', '费用登记', '统计利润'].map((step, index) => (
-            <div key={step} className="rounded-2xl bg-slate-50 p-4">
-              <div className="mb-3 flex size-9 items-center justify-center rounded-full bg-white shadow-sm">
-                {index < 3 ? <CheckCircle2 className="size-4 text-emerald-500" /> : index === 3 ? <CalendarClock className="size-4 text-blue-500" /> : <CircleAlert className="size-4 text-amber-500" />}
+        <CardBody className="grid gap-3 md:grid-cols-3 xl:grid-cols-6">
+          {['客户登记', '选择线路', '生成团队', '报名下单', '费用登记', '统计利润'].map(
+            (step, index) => (
+              <div key={step} className="rounded-xl border bg-background p-4">
+                <div className="mb-3 flex size-8 items-center justify-center rounded-lg bg-muted">
+                  {index < 3 ? (
+                    <CheckCircle2 className="size-4 text-emerald-500" />
+                  ) : index === 3 ? (
+                    <CalendarClock className="size-4 text-blue-500" />
+                  ) : (
+                    <CircleAlert className="size-4 text-amber-500" />
+                  )}
+                </div>
+                <p className="text-sm font-medium text-foreground">{step}</p>
               </div>
-              <p className="font-medium text-slate-900">{step}</p>
-            </div>
-          ))}
-        </div>
+            )
+          )}
+        </CardBody>
       </Card>
     </>
   )

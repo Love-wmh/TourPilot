@@ -1,87 +1,71 @@
-# Welcome to React Router!
+# ClassTrack
 
-A modern, production-ready template for building full-stack React applications using React Router.
+## 前端启动方式
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
+前端基于 React Router，默认开发服务地址为 `http://localhost:5173`。
 
-## Features
+### 1. 安装前端依赖
 
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
-
-## Getting Started
-
-### Installation
-
-Install the dependencies:
+在项目根目录执行：
 
 ```bash
-npm install
+pnpm install
 ```
 
-### Development
-
-Start the development server with HMR:
+### 2. 启动前端开发服务
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
-Your application will be available at `http://localhost:5173`.
-
-## Building for Production
-
-Create a production build:
+如需生产构建和启动，可执行：
 
 ```bash
-npm run build
+pnpm build
+pnpm start
 ```
 
-## Deployment
+## 后端启动方式
 
-### Docker Deployment
+后端代码位于 `backend/` 目录，基于 Flask 启动，默认监听 `http://localhost:5001`。
 
-To build and run using Docker:
+### 1. 创建并激活虚拟环境
 
 ```bash
-docker build -t my-app .
-
-# Run the container
-docker run -p 3000:3000 my-app
+python3 -m venv .venv
+source .venv/bin/activate
 ```
 
-The containerized application can be deployed to any platform that supports Docker, including:
+### 2. 安装后端依赖
 
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
-
-### DIY Deployment
-
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
+```bash
+pip install -r backend/requirements.txt
 ```
 
-## Styling
+### 3. 配置环境变量（可选）
 
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
+如果不配置环境变量，会使用 `backend/config.py` 中的默认值：
 
----
+```bash
+export SECRET_KEY=travel-agency-api
+export DATABASE_HOST=localhost
+export DATABASE_PORT=54321
+export DATABASE_NAME=travel_agency
+export DATABASE_USER=system
+export DATABASE_PASSWORD=123456789
+export CORS_ORIGINS=http://localhost:5173
+```
 
-Built with ❤️ using React Router.
+### 4. 启动后端服务
+
+在项目根目录执行：
+
+```bash
+python -m backend.app
+```
+
+启动成功后，可访问健康检查接口：
+
+```bash
+curl http://localhost:5001/api/health
+```

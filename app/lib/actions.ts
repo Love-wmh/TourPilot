@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useRevalidator } from 'react-router'
+import { toast } from 'sonner'
 
 export function formDataToObject(form: HTMLFormElement) {
   return Object.fromEntries(new FormData(form).entries())
@@ -29,7 +30,8 @@ export function useMutation() {
     try {
       await action()
       form?.reset()
-      setMessage(successMessage)
+      setMessage('')
+      toast.success(successMessage)
       revalidator.revalidate()
     } catch (error) {
       setError(error instanceof Error ? error.message : '操作失败')

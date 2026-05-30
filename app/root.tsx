@@ -1,6 +1,7 @@
 import { isRouteErrorResponse, Links, Meta, Outlet, Scripts, ScrollRestoration } from 'react-router'
 
 import type { Route } from './+types/root'
+import { Toaster } from './components/ui/sonner'
 import './app.css'
 
 export const links: Route.LinksFunction = () => [
@@ -27,6 +28,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         {children}
+        <Toaster position="top-center" />
         <ScrollRestoration />
         <Scripts />
       </body>

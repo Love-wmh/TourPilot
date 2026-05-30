@@ -36,6 +36,8 @@ python3 -m venv .venv
 source .venv/bin/activate
 ```
 
+.\.venv\Scripts\Activate.ps1
+
 ### 2. 安装后端依赖
 
 ```bash

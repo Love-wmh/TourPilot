@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import { ArrowRight, Compass, LockKeyhole, UserRound } from 'lucide-react'
 
+import { GlobalLoadingOverlay } from '~/components/global-loading-overlay'
 import { Button } from '~/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card'
 import { Input } from '~/components/ui/input'
@@ -34,6 +35,7 @@ export default function Login() {
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-muted/30 p-6">
+      <GlobalLoadingOverlay show={busy} />
       <section className="grid w-full max-w-5xl overflow-hidden rounded-lg border bg-card shadow-sm lg:grid-cols-[1.05fr_0.95fr]">
         <div className="flex flex-col justify-between border-b bg-muted/40 p-8 lg:border-b-0 lg:border-r lg:p-10">
           <div>

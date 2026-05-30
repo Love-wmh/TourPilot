@@ -63,7 +63,7 @@ export default function AppLayout() {
     navigate('/login')
   }
 
-  if (!user) return null
+  if (!user) return <GlobalLoadingOverlay show />
 
   return (
     <div className="min-h-screen bg-muted/20 text-foreground">

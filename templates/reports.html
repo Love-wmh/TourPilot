@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}统计报表{% endblock %}
+
+{% block content %}
+<section class="panel">
+    <h2>统计报表</h2>
+    <div class="stats report-stats">
+        <div><strong>{{ report_cards.income }}</strong><span>总实收</span></div>
+        <div><strong>{{ report_cards.expense }}</strong><span>总支出</span></div>
+        <div><strong>{{ report_cards.active_groups }}</strong><span>有效团队</span></div>
+        <div><strong>{{ report_cards.unpaid }}</strong><span>待收余款</span></div>
+    </div>
+    <div class="report-grid">
+        <div>
+            <h3>月度出团统计</h3>
+            <table>
+                <tr><th>月份</th><th>出团数</th></tr>
+                {% for row in monthly_groups %}
+                <tr><td>{{ row.month }}</td><td>{{ row.group_count }}</td></tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div>
+            <h3>线路热度排行</h3>
+            <table>
+                <tr><th>线路</th><th>订单数</th><th>人数</th></tr>
+                {% for row in route_hot %}
+                <tr><td>{{ row.destination }}</td><td>{{ row.order_count }}</td><td>{{ row.people_count }}</td></tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div>
+            <h3>客户消费排行</h3>
+            <table>
+                <tr><th>客户</th><th>电话</th><th>消费金额</th></tr>
+                {% for row in customer_rank %}
+                <tr><td>{{ row.name }}</td><td>{{ row.phone }}</td><td>{{ row.total_paid }}</td></tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div>
+            <h3>团队利润统计</h3>
+            <table>
+                <tr><th>团队</th><th>线路</th><th>收入</th><th>支出</th><th>利润</th></tr>
+                {% for row in profit %}
+                <tr>
+                    <td>{{ row.group_id }}</td>
+                    <td>{{ row.destination }}</td>
+                    <td>{{ row.income }}</td>
+                    <td>{{ row.expense }}</td>
+                    <td>{{ row.profit }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</section>
+<section class="panel detail-panel">
+    <h3>报表说明</h3>
+    <div class="workflow report-notes">
+        <span>月度出团用于观察业务高峰</span>
+        <span>线路热度用于调整产品投放</span>
+        <span>客户排行用于识别高价值客户</span>
+        <span>利润统计用于财务核算</span>
+        <span>待收余款用于销售催收</span>
+        <span>支出汇总用于控制成本</span>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}旅行社团队管理系统{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="topbar">
+        <div>
+            <h1>旅行社团队管理系统</h1>
+        </div>
+        <nav>
+            <a href="/">首页</a>
+            {% if g.can_access("customers") %}
+            <a href="/customers">客户</a>
+            {% endif %}
+            {% if g.can_access("routes") %}
+            <a href="/routes">线路</a>
+            {% endif %}
+            {% if g.can_access("guides") %}
+            <a href="/guides">导游</a>
+            {% endif %}
+            {% if g.can_access("groups") %}
+            <a href="/groups">团队</a>
+            {% endif %}
+            {% if g.can_access("orders") %}
+            <a href="/orders">订单</a>
+            {% endif %}
+            {% if g.can_access("expenses") %}
+            <a href="/expenses">费用</a>
+            {% endif %}
+            {% if g.can_access("reports") %}
+            <a href="/reports">报表</a>
+            {% endif %}
+            {% if g.can_access("users") %}
+            <a href="/users">用户</a>
+            {% endif %}
+        </nav>
+        <div class="userbar">
+            当前用户：{{ g.user.username }}（{{ g.user.role }}）
+            <a href="/logout">退出</a>
+        </div>
+    </header>
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

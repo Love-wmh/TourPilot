@@ -1,0 +1,387 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: #fff;
+    color: #1f2933;
+    font-family: "Microsoft YaHei", Arial, sans-serif;
+}
+
+.topbar {
+    background: linear-gradient(90deg, #0f2f4a, #19466a);
+    color: #fff;
+    padding: 18px 36px 22px;
+    box-shadow: 0 2px 10px rgba(15, 47, 74, 0.18);
+}
+
+.topbar h1 {
+    margin: 0 0 16px;
+    font-size: 30px;
+    line-height: 1.2;
+    letter-spacing: 0;
+}
+
+.topbar nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.topbar a {
+    color: #eef7ff;
+    text-decoration: none;
+    background: rgba(255, 255, 255, 0.13);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    padding: 9px 18px;
+    border-radius: 6px;
+    font-weight: 700;
+}
+
+.topbar a:hover {
+    background: rgba(255, 255, 255, 0.22);
+}
+
+.userbar {
+    margin-top: 14px;
+    color: #d8e8f7;
+    font-size: 14px;
+}
+
+.userbar a {
+    display: inline-block;
+    margin-left: 10px;
+    padding: 4px 10px;
+    font-size: 14px;
+}
+
+.container {
+    padding: 26px 36px 34px;
+    background: #f7f9fc;
+    min-height: auto;
+}
+
+.panel {
+    background: #fff;
+    border: 1px solid #d8e0ea;
+    border-radius: 8px;
+    padding: 28px 32px 32px;
+    box-shadow: 0 8px 22px rgba(31, 41, 51, 0.08);
+    overflow-x: auto;
+}
+
+.detail-panel {
+    margin-top: 16px;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 18px;
+    margin-top: 18px;
+}
+
+.mini-panel {
+    padding: 22px 24px;
+}
+
+.workflow-panel {
+    grid-column: 1 / -1;
+}
+
+.compact-table {
+    min-width: 0;
+}
+
+.report-stats {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.report-notes {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.compact-table th,
+.compact-table td {
+    padding: 9px 10px;
+}
+
+.workflow {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+}
+
+.workflow span {
+    display: block;
+    text-align: center;
+    background: #edf4fa;
+    border: 1px solid #d7e3ee;
+    border-radius: 8px;
+    padding: 14px 10px;
+    color: #17324d;
+    font-weight: 700;
+}
+
+.section-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.section-head h2 {
+    margin-bottom: 8px;
+}
+
+.section-head p {
+    margin: 0;
+    color: #5f6f7f;
+}
+
+h2 {
+    margin: 0 0 22px;
+    font-size: 25px;
+}
+
+h3 {
+    margin: 10px 0 14px;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 14px;
+    margin-bottom: 24px;
+}
+
+.stats div,
+.module-grid a {
+    background: #f5f9fc;
+    border: 1px solid #d7e3ee;
+    border-radius: 8px;
+    padding: 18px;
+}
+
+.stats strong {
+    display: block;
+    color: #18466a;
+    font-size: 30px;
+}
+
+.stats span {
+    color: #52616f;
+}
+
+.module-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 14px;
+}
+
+.module-grid a {
+    color: #17324d;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.module-grid a:hover {
+    border-color: #8db7dc;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin-bottom: 22px;
+    align-items: center;
+}
+
+input,
+select,
+button {
+    width: 100%;
+    height: 42px;
+    border: 1px solid #c8d5e3;
+    border-radius: 6px;
+    padding: 0 12px;
+    font: inherit;
+    background: #fff;
+}
+
+input:focus,
+select:focus {
+    border-color: #2f6da3;
+    outline: 2px solid rgba(47, 109, 163, 0.16);
+}
+
+button {
+    cursor: pointer;
+    background: #2869a8;
+    color: #fff;
+    border-color: #2869a8;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+button:hover {
+    background: #1f5b94;
+}
+
+button.danger {
+    background: #b42318;
+    border-color: #b42318;
+}
+
+button.warning {
+    background: #b7791f;
+    border-color: #b7791f;
+    margin-bottom: 6px;
+}
+
+.inline-form {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.inline-form input,
+.inline-form select {
+    min-width: 90px;
+    height: 34px;
+}
+
+.action-row {
+    display: grid;
+    grid-template-columns: minmax(90px, 1fr) 92px;
+    gap: 8px;
+    align-items: center;
+    max-width: 260px;
+    margin-bottom: 8px;
+}
+
+.action-row input {
+    height: 34px;
+    min-width: 0;
+}
+
+.action-row button {
+    width: 92px;
+    min-width: 92px;
+}
+
+.compact-action {
+    display: block;
+    margin-bottom: 0;
+}
+
+.compact-action button {
+    width: 72px;
+    min-width: 72px;
+}
+
+table {
+    width: 100%;
+    min-width: 980px;
+    border-collapse: collapse;
+    background: #fff;
+}
+
+th,
+td {
+    border: 1px solid #dce5ee;
+    padding: 12px 14px;
+    text-align: left;
+    vertical-align: middle;
+}
+
+th {
+    background: #edf4fa;
+    color: #17324d;
+    font-weight: 700;
+}
+
+tr:nth-child(even) td {
+    background: #fbfdff;
+}
+
+td form {
+    margin: 0;
+}
+
+td button {
+    width: auto;
+    min-width: 72px;
+    height: 34px;
+    padding: 0 12px;
+}
+
+.warn {
+    color: #b45309;
+    font-weight: 700;
+}
+
+.report-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: 20px;
+}
+
+@media (max-width: 900px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .workflow {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.login-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #0f2f4a, #2869a8);
+}
+
+.login-card {
+    width: 420px;
+    background: #fff;
+    border-radius: 10px;
+    padding: 34px;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.22);
+}
+
+.login-card h1 {
+    margin: 0 0 10px;
+    color: #17324d;
+}
+
+.login-card p {
+    margin: 0 0 22px;
+    color: #5f6f7f;
+}
+
+.login-card form {
+    display: grid;
+    gap: 12px;
+}
+
+.login-tips {
+    margin-top: 16px;
+    color: #6b7785;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.error {
+    margin-bottom: 12px;
+    padding: 10px;
+    border-radius: 6px;
+    background: #fff1f0;
+    color: #b42318;
+}

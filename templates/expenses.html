@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}费用管理{% endblock %}
+
+{% block content %}
+<section class="panel">
+    <h2>费用管理</h2>
+    <form class="form-grid" method="post">
+        <select name="group_id" required>
+            {% for group in groups %}
+            <option value="{{ group.id }}">{{ group.destination }} {{ group.departure_date }}</option>
+            {% endfor %}
+        </select>
+        <select name="expense_type">
+            <option value="地接费">地接费</option>
+            <option value="导游补贴">导游补贴</option>
+            <option value="保险">保险</option>
+            <option value="交通">交通</option>
+            <option value="其他">其他</option>
+        </select>
+        <input name="amount" type="number" min="0" step="0.01" placeholder="金额" required>
+        <input name="description" placeholder="说明">
+        <button type="submit">新增费用</button>
+    </form>
+    <table>
+        <thead>
+            <tr>
+                <th>编号</th>
+                <th>团队</th>
+                <th>出发日期</th>
+                <th>费用类型</th>
+                <th>金额</th>
+                <th>说明</th>
+                <th>日期</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for expense in expenses %}
+            <tr>
+                <td>{{ expense.id }}</td>
+                <td>{{ expense.destination }}</td>
+                <td>{{ expense.departure_date }}</td>
+                <td>{{ expense.expense_type }}</td>
+                <td>{{ expense.amount }}</td>
+                <td>{{ expense.description }}</td>
+                <td>{{ expense.expense_date }}</td>
+                <td>
+                    <form method="post" action="/expenses/{{ expense.id }}/delete" onsubmit="return confirm('确定删除该费用吗？')">
+                        <button class="danger" type="submit">删除</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+<section class="panel detail-panel">
+    <h3>费用分类汇总</h3>
+    <table class="compact-table">
+        <tr>
+            <th>线路</th>
+            <th>费用类型</th>
+            <th>合计金额</th>
+        </tr>
+        {% for item in expense_summary %}
+        <tr>
+            <td>{{ item.destination }}</td>
+            <td>{{ item.expense_type }}</td>
+            <td>{{ item.total_amount }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</section>
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}客户信息管理{% endblock %}
+
+{% block content %}
+<section class="panel">
+    <h2>客户信息管理</h2>
+    <form class="form-grid" method="post">
+        <input name="name" placeholder="姓名" required>
+        <input name="id_card" placeholder="身份证号" required>
+        <input name="phone" placeholder="电话">
+        <input name="emergency_contact" placeholder="紧急联系人">
+        <input name="travel_preference" placeholder="旅游偏好">
+        <button type="submit">新增客户</button>
+    </form>
+    <table>
+        <thead>
+            <tr>
+                <th>编号</th>
+                <th>姓名</th>
+                <th>身份证号</th>
+                <th>电话</th>
+                <th>紧急联系人</th>
+                <th>旅游偏好</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for customer in customers %}
+            <tr>
+                <td>{{ customer.id }}</td>
+                <td>{{ customer.name }}</td>
+                <td>{{ customer.id_card }}</td>
+                <td>{{ customer.phone }}</td>
+                <td>{{ customer.emergency_contact }}</td>
+                <td>{{ customer.travel_preference }}</td>
+                <td>
+                    <form method="post" action="/customers/{{ customer.id }}/delete" onsubmit="return confirm('确定删除该客户吗？')">
+                        <button class="danger" type="submit">删除</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+<section class="panel detail-panel">
+    <h3>客户报名记录</h3>
+    <table class="compact-table">
+        <tr>
+            <th>客户</th>
+            <th>线路</th>
+            <th>出发日期</th>
+            <th>人数</th>
+            <th>订单状态</th>
+            <th>实收</th>
+            <th>余款</th>
+        </tr>
+        {% for order in customer_orders %}
+        <tr>
+            <td>{{ order.customer_name }}</td>
+            <td>{{ order.destination }}</td>
+            <td>{{ order.departure_date }}</td>
+            <td>{{ order.people_count }}</td>
+            <td>{{ order.order_status }}</td>
+            <td>{{ order.amount_paid }}</td>
+            <td>{{ order.balance }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</section>
+{% endblock %}

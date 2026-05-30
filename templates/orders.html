@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block title %}报名与订单管理{% endblock %}
+
+{% block content %}
+<section class="panel">
+    <h2>报名与订单管理</h2>
+    <form class="form-grid" method="post">
+        <select name="customer_id" required>
+            {% for customer in customers %}
+            <option value="{{ customer.id }}">{{ customer.name }}</option>
+            {% endfor %}
+        </select>
+        <select name="group_id" required>
+            {% for group in groups %}
+            <option value="{{ group.id }}">{{ group.destination }} {{ group.departure_date }}</option>
+            {% endfor %}
+        </select>
+        <input name="people_count" type="number" min="1" placeholder="报名人数" value="1" required>
+        <select name="order_status">
+            <option value="待支付">待支付</option>
+            <option value="已支付">已支付</option>
+            <option value="已取消">已取消</option>
+        </select>
+        <input name="amount_receivable" type="number" min="0" step="0.01" placeholder="应收金额" required>
+        <input name="amount_paid" type="number" min="0" step="0.01" placeholder="实收金额" value="0" required>
+        <button type="submit">新增订单</button>
+    </form>
+    <table>
+        <thead>
+            <tr>
+                <th>编号</th>
+                <th>客户</th>
+                <th>线路</th>
+                <th>出发日期</th>
+                <th>报名人数</th>
+                <th>状态</th>
+                <th>应收</th>
+                <th>实收</th>
+                <th>余款</th>
+                <th>异常处理</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>{{ order.id }}</td>
+                <td>{{ order.customer_name }}</td>
+                <td>{{ order.destination }}</td>
+                <td>{{ order.departure_date }}</td>
+                <td>{{ order.people_count }}</td>
+                <td>{{ order.order_status }}</td>
+                <td>{{ order.amount_receivable }}</td>
+                <td>{{ order.amount_paid }}</td>
+                <td>{{ order.balance }}</td>
+                <td>
+                    {% if order.order_status == "已取消" %}
+                    <span class="warn">退团扣费已记录</span>
+                    {% elif order.balance > 0 %}
+                    <span class="warn">存在余款</span>
+                    {% else %}
+                    正常
+                    {% endif %}
+                </td>
+                <td>
+                    {% if order.order_status != "已取消" %}
+                    <form class="action-row" method="post" action="/orders/{{ order.id }}/cancel" onsubmit="return confirm('确定办理退团并扣费吗？')">
+                        <input name="deduct_fee" type="number" min="0" step="0.01" placeholder="扣费" value="0">
+                        <button class="warning" type="submit">退团扣费</button>
+                    </form>
+                    {% endif %}
+                    <form class="action-row compact-action" method="post" action="/orders/{{ order.id }}/delete" onsubmit="return confirm('确定删除该订单吗？')">
+                        <button class="danger" type="submit">删除</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+<section class="dashboard-grid">
+    <div class="panel mini-panel">
+        <h3>订单收款汇总</h3>
+        <table class="compact-table">
+            <tr>
+                <th>订单状态</th>
+                <th>订单数</th>
+                <th>应收</th>
+                <th>实收</th>
+                <th>余款</th>
+            </tr>
+            {% for item in order_summary %}
+            <tr>
+                <td>{{ item.order_status }}</td>
+                <td>{{ item.order_count }}</td>
+                <td>{{ item.receivable }}</td>
+                <td>{{ item.paid }}</td>
+                <td>{{ item.balance }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="panel mini-panel">
+        <h3>待收余款订单</h3>
+        <table class="compact-table">
+            <tr>
+                <th>订单</th>
+                <th>客户</th>
+                <th>线路</th>
+                <th>应收</th>
+                <th>实收</th>
+                <th>余款</th>
+            </tr>
+            {% for item in unpaid_orders %}
+            <tr>
+                <td>{{ item.id }}</td>
+                <td>{{ item.customer_name }}</td>
+                <td>{{ item.destination }}</td>
+                <td>{{ item.amount_receivable }}</td>
+                <td>{{ item.amount_paid }}</td>
+                <td><span class="warn">{{ item.balance }}</span></td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</section>
+{% endblock %}

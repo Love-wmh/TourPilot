@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}首页 - 旅行社团队管理系统{% endblock %}
+
+{% block content %}
+<section class="panel">
+    <div class="section-head">
+        <div>
+            <h2>系统功能</h2>
+            <p>旅行社客户、线路、团队、订单与费用的一体化管理</p>
+        </div>
+    </div>
+    <div class="stats">
+        <div><strong>{{ counts.customers }}</strong><span>客户</span></div>
+        <div><strong>{{ counts.routes }}</strong><span>线路</span></div>
+        <div><strong>{{ counts.guides }}</strong><span>导游</span></div>
+        <div><strong>{{ counts.groups }}</strong><span>团队</span></div>
+        <div><strong>{{ counts.orders }}</strong><span>订单</span></div>
+    </div>
+    <h3>常用功能</h3>
+    <div class="module-grid">
+        {% if g.can_access("customers") %}
+        <a href="/customers">客户信息管理</a>
+        {% endif %}
+        {% if g.can_access("routes") %}
+        <a href="/routes">旅游线路管理</a>
+        {% endif %}
+        {% if g.can_access("guides") %}
+        <a href="/guides">导游管理</a>
+        {% endif %}
+        {% if g.can_access("groups") %}
+        <a href="/groups">团队管理</a>
+        {% endif %}
+        {% if g.can_access("orders") %}
+        <a href="/orders">报名与订单管理</a>
+        {% endif %}
+        {% if g.can_access("expenses") %}
+        <a href="/expenses">费用管理</a>
+        {% endif %}
+        {% if g.can_access("reports") %}
+        <a href="/reports">统计报表</a>
+        {% endif %}
+        {% if g.can_access("users") %}
+        <a href="/users">用户与角色管理</a>
+        {% endif %}
+    </div>
+</section>
+
+<section class="dashboard-grid">
+    <div class="panel mini-panel">
+        <h3>近期订单</h3>
+        <table class="compact-table">
+            <tr>
+                <th>编号</th>
+                <th>客户</th>
+                <th>线路</th>
+                <th>人数</th>
+                <th>状态</th>
+                <th>实收</th>
+            </tr>
+            {% for order in recent_orders %}
+            <tr>
+                <td>{{ order.id }}</td>
+                <td>{{ order.customer_name }}</td>
+                <td>{{ order.destination }}</td>
+                <td>{{ order.people_count }}</td>
+                <td>{{ order.order_status }}</td>
+                <td>{{ order.amount_paid }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div class="panel mini-panel">
+        <h3>待处理团队</h3>
+        <table class="compact-table">
+            <tr>
+                <th>团队</th>
+                <th>线路</th>
+                <th>人数</th>
+                <th>最低</th>
+                <th>状态</th>
+            </tr>
+            {% for group in group_alerts %}
+            <tr>
+                <td>{{ group.id }}</td>
+                <td>{{ group.destination }}</td>
+                <td>{{ group.total_people }}</td>
+                <td>{{ group.min_people }}</td>
+                <td><span class="warn">{{ group.status }}</span></td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div class="panel mini-panel workflow-panel">
+        <h3>业务流程</h3>
+        <div class="workflow">
+            <span>客户登记</span>
+            <span>选择线路</span>
+            <span>生成团队</span>
+            <span>报名下单</span>
+            <span>费用登记</span>
+            <span>统计利润</span>
+        </div>
+    </div>
+</section>
+{% endblock %}

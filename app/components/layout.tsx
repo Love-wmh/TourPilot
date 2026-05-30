@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { NavLink, Outlet, useNavigate } from 'react-router'
+import { NavLink, Outlet, useNavigate, useNavigation } from 'react-router'
 import {
   BarChart3,
   Bus,
@@ -14,6 +14,7 @@ import {
   UsersRound,
 } from 'lucide-react'
 
+import { GlobalLoadingOverlay } from '~/components/global-loading-overlay'
 import { Avatar, AvatarFallback } from '~/components/ui/avatar'
 import { Button } from '~/components/ui/button'
 import { Separator } from '~/components/ui/separator'
@@ -39,6 +40,7 @@ const navigation: Array<{
 
 export default function AppLayout() {
   const navigate = useNavigate()
+  const navigationState = useNavigation()
   const [user, setUser] = useState<User | null>(null)
 
   useEffect(() => {
@@ -54,6 +56,7 @@ export default function AppLayout() {
   }, [navigate])
 
   const visibleNavigation = navigation.filter((item) => user?.permissions?.includes(item.permission))
+  const isPageLoading = navigationState.state === 'loading'
 
   async function handleLogout() {
     await authApi.logout()
@@ -64,6 +67,7 @@ export default function AppLayout() {
 
   return (
     <div className="min-h-screen bg-muted/20 text-foreground">
+      <GlobalLoadingOverlay show={isPageLoading} />
       <aside className="fixed inset-y-0 left-0 z-20 hidden w-60 border-r bg-background lg:flex lg:flex-col">
         <div className="flex h-16 items-center gap-3 px-5">
           <div className="flex size-9 items-center justify-center rounded-md bg-primary text-primary-foreground">

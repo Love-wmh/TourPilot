@@ -1,14 +1,37 @@
+import { useState } from 'react'
+import { useNavigate } from 'react-router'
 import { ArrowRight, Compass, LockKeyhole, UserRound } from 'lucide-react'
 
 import { Button } from '~/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card'
 import { Input } from '~/components/ui/input'
+import { authApi } from '~/lib/api'
+import { formDataToObject } from '~/lib/actions'
 
 export function meta() {
   return [{ title: '登录 - 旅行社团队管理系统' }]
 }
 
 export default function Login() {
+  const navigate = useNavigate()
+  const [error, setError] = useState('')
+  const [busy, setBusy] = useState(false)
+
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    setBusy(true)
+    setError('')
+    try {
+      const data = formDataToObject(event.currentTarget) as { username: string; password: string }
+      await authApi.login(data)
+      navigate('/')
+    } catch (error) {
+      setError(error instanceof Error ? error.message : '登录失败')
+    } finally {
+      setBusy(false)
+    }
+  }
+
   return (
     <main className="flex min-h-screen items-center justify-center bg-muted/30 p-6">
       <section className="grid w-full max-w-5xl overflow-hidden rounded-lg border bg-card shadow-sm lg:grid-cols-[1.05fr_0.95fr]">
@@ -43,7 +66,7 @@ export default function Login() {
             <CardDescription>使用演示账号进入管理后台</CardDescription>
           </CardHeader>
           <CardContent className="p-8 pt-4 lg:p-10 lg:pt-4">
-            <form className="space-y-4" action="/" method="get">
+            <form className="space-y-4" onSubmit={handleSubmit}>
               <label className="block space-y-2">
                 <span className="flex items-center gap-2 text-sm font-medium">
                   <UserRound className="size-4" />
@@ -64,8 +87,9 @@ export default function Login() {
                   className="h-10"
                 />
               </label>
-              <Button className="h-10 w-full" size="lg">
-                登录系统
+              {error && <p className="text-sm text-destructive">{error}</p>}
+              <Button className="h-10 w-full" size="lg" disabled={busy}>
+                {busy ? '登录中...' : '登录系统'}
                 <ArrowRight className="size-4" />
               </Button>
             </form>

@@ -12,7 +12,10 @@ import {
   Td,
   TextInput,
 } from '~/components/page'
+import { StatusMessage } from '~/components/status-message'
 import { Button } from '~/components/ui/button'
+import { routesApi } from '~/lib/api'
+import { formDataToObject, numberValue, useMutation } from '~/lib/actions'
 import { loadRoutesData } from '~/lib/data-loader'
 
 export function meta() {
@@ -25,6 +28,27 @@ export async function clientLoader() {
 
 export default function RoutesPage({ loaderData }: { loaderData: Awaited<ReturnType<typeof clientLoader>> }) {
   const { routes, groups } = loaderData
+  const mutation = useMutation()
+
+  function handleCreate(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const form = event.currentTarget
+    const values = formDataToObject(form)
+    const data = {
+      destination: String(values.destination || ''),
+      days: numberValue(values.days),
+      attractions: String(values.attractions || ''),
+      adult_price: numberValue(values.adult_price),
+      child_price: numberValue(values.child_price),
+      status: String(values.status || '启用'),
+    }
+    mutation.run(() => routesApi.create(data), '线路新增成功', form)
+  }
+
+  function handleRemove(id: number) {
+    if (!window.confirm('确认删除该线路吗？')) return
+    mutation.run(() => routesApi.remove(id), '线路删除成功')
+  }
 
   return (
     <>
@@ -36,7 +60,7 @@ export default function RoutesPage({ loaderData }: { loaderData: Awaited<ReturnT
 
       <Card>
         <SectionTitle title="新增线路" description="维护可售旅游产品信息" />
-        <FormGrid>
+        <FormGrid onSubmit={handleCreate}>
           <TextInput name="destination" placeholder="目的地" required />
           <TextInput name="days" type="number" min={1} placeholder="天数" required />
           <TextInput name="attractions" placeholder="景点" />
@@ -60,10 +84,11 @@ export default function RoutesPage({ loaderData }: { loaderData: Awaited<ReturnT
             <option>启用</option>
             <option>停用</option>
           </SelectInput>
-          <Button type="button" className="h-9 xl:col-span-2">
+          <Button className="h-9 xl:col-span-2" disabled={mutation.busy}>
             新增线路
           </Button>
         </FormGrid>
+        <StatusMessage message={mutation.message} error={mutation.error} />
         <DataTable headers={['编号', '目的地', '天数', '景点', '成人价', '儿童价', '状态', '操作']}>
           {routes.map((route) => (
             <TableRow key={route.id}>
@@ -77,7 +102,7 @@ export default function RoutesPage({ loaderData }: { loaderData: Awaited<ReturnT
                 <Badge tone={route.status === '启用' ? 'green' : 'slate'}>{route.status}</Badge>
               </Td>
               <Td>
-                <Button type="button" variant="destructive" size="sm">
+                <Button type="button" variant="destructive" size="sm" onClick={() => handleRemove(route.id)} disabled={mutation.busy}>
                   <Trash2 className="size-3.5" />
                   删除
                 </Button>

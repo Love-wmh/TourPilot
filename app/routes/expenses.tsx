@@ -13,7 +13,10 @@ import {
   Td,
   TextInput,
 } from '~/components/page'
+import { StatusMessage } from '~/components/status-message'
 import { Button } from '~/components/ui/button'
+import { expensesApi } from '~/lib/api'
+import { formDataToObject, numberValue, useMutation } from '~/lib/actions'
 import { loadExpensesData } from '~/lib/data-loader'
 
 export function meta() {
@@ -26,7 +29,26 @@ export async function clientLoader() {
 
 export default function ExpensesPage({ loaderData }: { loaderData: Awaited<ReturnType<typeof clientLoader>> }) {
   const { expenses, groups, expense_summary: expenseSummary } = loaderData
+  const mutation = useMutation()
   const totalExpense = expenses.reduce((total, expense) => total + expense.amount, 0)
+
+  function handleCreate(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const form = event.currentTarget
+    const values = formDataToObject(form)
+    const data = {
+      group_id: numberValue(values.group_id),
+      expense_type: String(values.expense_type || '其他'),
+      amount: numberValue(values.amount),
+      description: String(values.description || ''),
+    }
+    mutation.run(() => expensesApi.create(data), '费用新增成功', form)
+  }
+
+  function handleRemove(id: number) {
+    if (!window.confirm('确认删除该费用吗？')) return
+    mutation.run(() => expensesApi.remove(id), '费用删除成功')
+  }
 
   return (
     <>
@@ -48,7 +70,7 @@ export default function ExpensesPage({ loaderData }: { loaderData: Awaited<Retur
 
       <Card>
         <SectionTitle title="新增费用" description="选择团队并登记费用类型、金额与说明" />
-        <FormGrid>
+        <FormGrid onSubmit={handleCreate}>
           <SelectInput name="group_id" required>
             {groups.map((group) => (
               <option key={group.id} value={group.id}>
@@ -65,10 +87,11 @@ export default function ExpensesPage({ loaderData }: { loaderData: Awaited<Retur
           </SelectInput>
           <TextInput name="amount" type="number" min={0} step="0.01" placeholder="金额" required />
           <TextInput name="description" placeholder="说明" />
-          <Button type="button" className="h-9 xl:col-span-4">
+          <Button className="h-9 xl:col-span-4" disabled={mutation.busy}>
             新增费用
           </Button>
         </FormGrid>
+        <StatusMessage message={mutation.message} error={mutation.error} />
         <DataTable
           headers={['编号', '团队', '出发日期', '费用类型', '金额', '说明', '日期', '操作']}
         >
@@ -84,7 +107,7 @@ export default function ExpensesPage({ loaderData }: { loaderData: Awaited<Retur
               <Td>{expense.description}</Td>
               <Td>{expense.expense_date}</Td>
               <Td>
-                <Button type="button" variant="destructive" size="sm">
+                <Button type="button" variant="destructive" size="sm" onClick={() => handleRemove(expense.id)} disabled={mutation.busy}>
                   <Trash2 className="size-3.5" />
                   删除
                 </Button>

@@ -12,7 +12,10 @@ import {
   Td,
   TextInput,
 } from '~/components/page'
+import { StatusMessage } from '~/components/status-message'
 import { Button } from '~/components/ui/button'
+import { usersApi } from '~/lib/api'
+import { formDataToObject, useMutation } from '~/lib/actions'
 import { loadUsersData } from '~/lib/data-loader'
 
 export function meta() {
@@ -26,6 +29,19 @@ export async function clientLoader() {
 export default function UsersPage({ loaderData }: { loaderData: Awaited<ReturnType<typeof clientLoader>> }) {
   const { users, role_summary: roleSummary } = loaderData
   const currentUser = users[0]
+  const mutation = useMutation()
+
+  function handleCreate(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const form = event.currentTarget
+    const data = formDataToObject(form) as Parameters<typeof usersApi.create>[0]
+    mutation.run(() => usersApi.create(data), '用户新增成功', form)
+  }
+
+  function handleRemove(id: number) {
+    if (!window.confirm('确认删除该用户吗？')) return
+    mutation.run(() => usersApi.remove(id), '用户删除成功')
+  }
 
   return (
     <>
@@ -37,7 +53,7 @@ export default function UsersPage({ loaderData }: { loaderData: Awaited<ReturnTy
 
       <Card>
         <SectionTitle title="新增用户" description="创建账号并分配业务角色" />
-        <FormGrid>
+        <FormGrid onSubmit={handleCreate}>
           <TextInput name="username" placeholder="用户名" required />
           <TextInput name="password" placeholder="密码" required />
           <SelectInput name="role" required>
@@ -47,10 +63,11 @@ export default function UsersPage({ loaderData }: { loaderData: Awaited<ReturnTy
             <option>财务</option>
             <option>导游</option>
           </SelectInput>
-          <Button type="button" className="h-9">
+          <Button className="h-9" disabled={mutation.busy}>
             新增用户
           </Button>
         </FormGrid>
+        <StatusMessage message={mutation.message} error={mutation.error} />
         <DataTable headers={['编号', '用户名', '角色', '操作']}>
           {users.map((user) => (
             <TableRow key={user.id}>
@@ -61,7 +78,7 @@ export default function UsersPage({ loaderData }: { loaderData: Awaited<ReturnTy
               </Td>
               <Td>
                 {currentUser.id !== user.id ? (
-                  <Button type="button" variant="destructive" size="sm">
+                  <Button type="button" variant="destructive" size="sm" onClick={() => handleRemove(user.id)} disabled={mutation.busy}>
                     <Trash2 className="size-3.5" />
                     删除
                   </Button>

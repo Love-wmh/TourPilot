@@ -209,8 +209,12 @@ export function SelectInput({
   )
 }
 
-export function FormGrid({ children }: { children: ReactNode }) {
-  return <form className="mx-4 mb-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">{children}</form>
+export function FormGrid({ children, className, ...props }: React.FormHTMLAttributes<HTMLFormElement>) {
+  return (
+    <form className={cn('mx-4 mb-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4', className)} {...props}>
+      {children}
+    </form>
+  )
 }
 
 export { TableCell, TableRow }

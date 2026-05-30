@@ -13,7 +13,10 @@ import {
   Td,
   TextInput,
 } from '~/components/page'
+import { StatusMessage } from '~/components/status-message'
 import { Button } from '~/components/ui/button'
+import { ordersApi } from '~/lib/api'
+import { formDataToObject, numberValue, useMutation } from '~/lib/actions'
 import { loadOrdersData } from '~/lib/data-loader'
 
 export function meta() {
@@ -26,9 +29,38 @@ export async function clientLoader() {
 
 export default function OrdersPage({ loaderData }: { loaderData: Awaited<ReturnType<typeof clientLoader>> }) {
   const { orders, customers, groups, unpaid_orders: unpaidOrders } = loaderData
+  const mutation = useMutation()
   const receivable = orders.reduce((total, order) => total + order.amount_receivable, 0)
   const paid = orders.reduce((total, order) => total + order.amount_paid, 0)
   const balance = orders.reduce((total, order) => total + order.balance, 0)
+
+  function handleCreate(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const form = event.currentTarget
+    const values = formDataToObject(form)
+    const data = {
+      customer_id: numberValue(values.customer_id),
+      group_id: numberValue(values.group_id),
+      people_count: numberValue(values.people_count, 1),
+      order_status: String(values.order_status || '待支付'),
+      amount_receivable: numberValue(values.amount_receivable),
+      amount_paid: numberValue(values.amount_paid),
+    }
+    mutation.run(() => ordersApi.create(data), '订单新增成功', form)
+  }
+
+  function handleRemove(id: number) {
+    if (!window.confirm('确认删除该订单吗？')) return
+    mutation.run(() => ordersApi.remove(id), '订单删除成功')
+  }
+
+  function handleCancel(id: number) {
+    const input = window.prompt('请输入退团扣费金额', '0')
+    if (input === null) return
+    const deductFee = Number(input)
+    if (!Number.isFinite(deductFee) || deductFee < 0) return
+    mutation.run(() => ordersApi.cancel(id, deductFee), '退团扣费处理成功')
+  }
 
   return (
     <>
@@ -46,7 +78,7 @@ export default function OrdersPage({ loaderData }: { loaderData: Awaited<ReturnT
 
       <Card>
         <SectionTitle title="新增订单" description="选择客户和团队后录入报名人数与收款信息" />
-        <FormGrid>
+        <FormGrid onSubmit={handleCreate}>
           <SelectInput name="customer_id" required>
             {customers.map((customer) => (
               <option key={customer.id} value={customer.id}>
@@ -91,10 +123,11 @@ export default function OrdersPage({ loaderData }: { loaderData: Awaited<ReturnT
             defaultValue={0}
             required
           />
-          <Button type="button" className="h-9 xl:col-span-2">
+          <Button className="h-9 xl:col-span-2" disabled={mutation.busy}>
             新增订单
           </Button>
         </FormGrid>
+        <StatusMessage message={mutation.message} error={mutation.error} />
         <DataTable
           headers={[
             '编号',
@@ -145,12 +178,12 @@ export default function OrdersPage({ loaderData }: { loaderData: Awaited<ReturnT
               <Td>
                 <div className="flex flex-wrap gap-2">
                   {order.order_status !== '已取消' && (
-                    <Button type="button" variant="outline" size="sm">
+                    <Button type="button" variant="outline" size="sm" onClick={() => handleCancel(order.id)} disabled={mutation.busy}>
                       <ReceiptText className="size-3.5" />
                       退团扣费
                     </Button>
                   )}
-                  <Button type="button" variant="destructive" size="sm">
+                  <Button type="button" variant="destructive" size="sm" onClick={() => handleRemove(order.id)} disabled={mutation.busy}>
                     <Trash2 className="size-3.5" />
                     删除
                   </Button>

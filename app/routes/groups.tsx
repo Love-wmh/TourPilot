@@ -13,7 +13,10 @@ import {
   Td,
   TextInput,
 } from '~/components/page'
+import { StatusMessage } from '~/components/status-message'
 import { Button } from '~/components/ui/button'
+import { groupsApi } from '~/lib/api'
+import { formDataToObject, numberValue, optionalNumberValue, useMutation } from '~/lib/actions'
 import { loadGroupsData } from '~/lib/data-loader'
 
 export function meta() {
@@ -26,6 +29,42 @@ export async function clientLoader() {
 
 export default function GroupsPage({ loaderData }: { loaderData: Awaited<ReturnType<typeof clientLoader>> }) {
   const { groups, routes, guides, status_summary: statusSummary } = loaderData
+  const mutation = useMutation()
+
+  function handleCreate(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const form = event.currentTarget
+    const values = formDataToObject(form)
+    const data = {
+      route_id: numberValue(values.route_id),
+      guide_id: optionalNumberValue(values.guide_id),
+      departure_date: String(values.departure_date || ''),
+      return_date: String(values.return_date || ''),
+      total_people: numberValue(values.total_people),
+      min_people: numberValue(values.min_people, 10),
+      status: String(values.status || '待成团'),
+    }
+    mutation.run(() => groupsApi.create(data), '团队新增成功', form)
+  }
+
+  function handleRemove(id: number) {
+    if (!window.confirm('确认删除该团队吗？')) return
+    mutation.run(() => groupsApi.remove(id), '团队删除成功')
+  }
+
+  function handleCancel(id: number) {
+    if (!window.confirm('确认取消该团队及相关订单吗？')) return
+    mutation.run(() => groupsApi.cancel(id), '团队取消成功')
+  }
+
+  function handleChangeGuide(id: number, currentGuideId?: number | null) {
+    const options = guides.map((guide) => `${guide.id}:${guide.name}`).join('，')
+    const input = window.prompt(`请输入新导游编号，留空表示不指定。可选：${options}`, currentGuideId ? String(currentGuideId) : '')
+    if (input === null) return
+    const guideId = input.trim() === '' ? null : Number(input)
+    if (guideId !== null && !Number.isFinite(guideId)) return
+    mutation.run(() => groupsApi.changeGuide(id, guideId), '导游更换成功')
+  }
 
   return (
     <>
@@ -48,7 +87,7 @@ export default function GroupsPage({ loaderData }: { loaderData: Awaited<ReturnT
 
       <Card>
         <SectionTitle title="新增团队" description="选择线路、导游和出行日期" />
-        <FormGrid>
+        <FormGrid onSubmit={handleCreate}>
           <SelectInput name="route_id" required>
             {routes.map((route) => (
               <option key={route.id} value={route.id}>
@@ -86,10 +125,11 @@ export default function GroupsPage({ loaderData }: { loaderData: Awaited<ReturnT
             <option>已取消</option>
             <option>已结束</option>
           </SelectInput>
-          <Button type="button" className="h-9">
+          <Button className="h-9" disabled={mutation.busy}>
             新增团队
           </Button>
         </FormGrid>
+        <StatusMessage message={mutation.message} error={mutation.error} />
         <DataTable
           headers={[
             '编号',
@@ -130,16 +170,16 @@ export default function GroupsPage({ loaderData }: { loaderData: Awaited<ReturnT
                 </Td>
                 <Td>
                   <div className="flex flex-wrap gap-2">
-                    <Button type="button" variant="outline" size="sm">
+                    <Button type="button" variant="outline" size="sm" onClick={() => handleChangeGuide(group.id, group.guide_id)} disabled={mutation.busy}>
                       <RefreshCw className="size-3.5" />
                       更换导游
                     </Button>
                     {insufficient && group.status !== '已取消' && (
-                      <Button type="button" variant="outline" size="sm">
+                      <Button type="button" variant="outline" size="sm" onClick={() => handleCancel(group.id)} disabled={mutation.busy}>
                         人数不足取消
                       </Button>
                     )}
-                    <Button type="button" variant="destructive" size="sm">
+                    <Button type="button" variant="destructive" size="sm" onClick={() => handleRemove(group.id)} disabled={mutation.busy}>
                       <Trash2 className="size-3.5" />
                       删除
                     </Button>

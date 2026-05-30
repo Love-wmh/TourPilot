@@ -30,6 +30,10 @@ async function withFallback<T>(load: () => Promise<T>, fallback: T) {
   try {
     return await load()
   } catch (error) {
+    if (error instanceof Error && error.message.includes('请先登录')) {
+      window.location.href = '/login'
+      throw error
+    }
     console.warn(error)
     return fallback
   }

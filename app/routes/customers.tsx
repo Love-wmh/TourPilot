@@ -11,7 +11,10 @@ import {
   Td,
   TextInput,
 } from '~/components/page'
+import { StatusMessage } from '~/components/status-message'
 import { Button } from '~/components/ui/button'
+import { customersApi } from '~/lib/api'
+import { formDataToObject, useMutation } from '~/lib/actions'
 import { loadCustomersData } from '~/lib/data-loader'
 
 export function meta() {
@@ -24,6 +27,19 @@ export async function clientLoader() {
 
 export default function CustomersPage({ loaderData }: { loaderData: Awaited<ReturnType<typeof clientLoader>> }) {
   const { customers, orders } = loaderData
+  const mutation = useMutation()
+
+  function handleCreate(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const form = event.currentTarget
+    const data = formDataToObject(form) as Parameters<typeof customersApi.create>[0]
+    mutation.run(() => customersApi.create(data), '客户新增成功', form)
+  }
+
+  function handleRemove(id: number) {
+    if (!window.confirm('确认删除该客户吗？')) return
+    mutation.run(() => customersApi.remove(id), '客户删除成功')
+  }
 
   return (
     <>
@@ -35,16 +51,17 @@ export default function CustomersPage({ loaderData }: { loaderData: Awaited<Retu
 
       <Card>
         <SectionTitle title="新增客户" description="录入客户身份、联系方式与出游偏好" />
-        <FormGrid>
+        <FormGrid onSubmit={handleCreate}>
           <TextInput name="name" placeholder="姓名" required />
           <TextInput name="id_card" placeholder="身份证号" required />
           <TextInput name="phone" placeholder="电话" />
           <TextInput name="emergency_contact" placeholder="紧急联系人" />
           <TextInput name="travel_preference" placeholder="旅游偏好" className="xl:col-span-3" />
-          <Button type="button" className="h-9">
+          <Button className="h-9" disabled={mutation.busy}>
             新增客户
           </Button>
         </FormGrid>
+        <StatusMessage message={mutation.message} error={mutation.error} />
         <DataTable headers={['编号', '姓名', '身份证号', '电话', '紧急联系人', '旅游偏好', '操作']}>
           {customers.map((customer) => (
             <TableRow key={customer.id}>
@@ -57,7 +74,7 @@ export default function CustomersPage({ loaderData }: { loaderData: Awaited<Retu
                 <Badge tone="blue">{customer.travel_preference}</Badge>
               </Td>
               <Td>
-                <Button type="button" variant="destructive" size="sm">
+                <Button type="button" variant="destructive" size="sm" onClick={() => handleRemove(customer.id)} disabled={mutation.busy}>
                   <Trash2 className="size-3.5" />
                   删除
                 </Button>

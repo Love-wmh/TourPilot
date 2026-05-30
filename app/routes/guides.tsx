@@ -11,7 +11,10 @@ import {
   Td,
   TextInput,
 } from '~/components/page'
+import { StatusMessage } from '~/components/status-message'
 import { Button } from '~/components/ui/button'
+import { guidesApi } from '~/lib/api'
+import { formDataToObject, numberValue, useMutation } from '~/lib/actions'
 import { loadGuidesData } from '~/lib/data-loader'
 
 export function meta() {
@@ -24,6 +27,25 @@ export async function clientLoader() {
 
 export default function GuidesPage({ loaderData }: { loaderData: Awaited<ReturnType<typeof clientLoader>> }) {
   const { guides, groups: guideGroups } = loaderData
+  const mutation = useMutation()
+
+  function handleCreate(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const form = event.currentTarget
+    const values = formDataToObject(form)
+    const data = {
+      name: String(values.name || ''),
+      phone: String(values.phone || ''),
+      experience_years: numberValue(values.experience_years),
+      description: String(values.description || ''),
+    }
+    mutation.run(() => guidesApi.create(data), '导游新增成功', form)
+  }
+
+  function handleRemove(id: number) {
+    if (!window.confirm('确认删除该导游吗？')) return
+    mutation.run(() => guidesApi.remove(id), '导游删除成功')
+  }
 
   return (
     <>
@@ -35,7 +57,7 @@ export default function GuidesPage({ loaderData }: { loaderData: Awaited<ReturnT
 
       <Card>
         <SectionTitle title="新增导游" description="录入导游联系方式与带团经验" />
-        <FormGrid>
+        <FormGrid onSubmit={handleCreate}>
           <TextInput name="name" placeholder="姓名" required />
           <TextInput name="phone" placeholder="电话" />
           <TextInput
@@ -46,10 +68,11 @@ export default function GuidesPage({ loaderData }: { loaderData: Awaited<ReturnT
             defaultValue={0}
           />
           <TextInput name="description" placeholder="说明" />
-          <Button type="button" className="h-9 xl:col-span-4">
+          <Button className="h-9 xl:col-span-4" disabled={mutation.busy}>
             新增导游
           </Button>
         </FormGrid>
+        <StatusMessage message={mutation.message} error={mutation.error} />
         <DataTable headers={['编号', '姓名', '电话', '带团经验', '所带团队数', '说明', '操作']}>
           {guides.map((guide) => (
             <TableRow key={guide.id}>
@@ -62,7 +85,7 @@ export default function GuidesPage({ loaderData }: { loaderData: Awaited<ReturnT
               </Td>
               <Td>{guide.description}</Td>
               <Td>
-                <Button type="button" variant="destructive" size="sm">
+                <Button type="button" variant="destructive" size="sm" onClick={() => handleRemove(guide.id)} disabled={mutation.busy}>
                   <Trash2 className="size-3.5" />
                   删除
                 </Button>

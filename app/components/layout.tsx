@@ -1,4 +1,5 @@
-import { NavLink, Outlet } from 'react-router'
+import { useEffect, useState } from 'react'
+import { NavLink, Outlet, useNavigate } from 'react-router'
 import {
   BarChart3,
   Bus,
@@ -16,7 +17,7 @@ import {
 import { Avatar, AvatarFallback } from '~/components/ui/avatar'
 import { Button } from '~/components/ui/button'
 import { Separator } from '~/components/ui/separator'
-import { canAccess, currentUser, type Permission } from '~/data'
+import { authApi, type Permission, type User } from '~/lib/api'
 import { cn } from '~/lib/utils'
 
 const navigation: Array<{
@@ -37,7 +38,29 @@ const navigation: Array<{
 ]
 
 export default function AppLayout() {
-  const visibleNavigation = navigation.filter((item) => canAccess(item.permission))
+  const navigate = useNavigate()
+  const [user, setUser] = useState<User | null>(null)
+
+  useEffect(() => {
+    authApi.me()
+      .then((currentUser) => {
+        if (!currentUser) {
+          navigate('/login')
+          return
+        }
+        setUser(currentUser)
+      })
+      .catch(() => navigate('/login'))
+  }, [navigate])
+
+  const visibleNavigation = navigation.filter((item) => user?.permissions?.includes(item.permission))
+
+  async function handleLogout() {
+    await authApi.logout()
+    navigate('/login')
+  }
+
+  if (!user) return null
 
   return (
     <div className="min-h-screen bg-muted/20 text-foreground">
@@ -78,16 +101,14 @@ export default function AppLayout() {
         <div className="p-4">
           <div className="flex items-center gap-3 rounded-lg border bg-card p-3">
             <Avatar>
-              <AvatarFallback>{currentUser.username.slice(0, 1).toUpperCase()}</AvatarFallback>
+              <AvatarFallback>{user.username.slice(0, 1).toUpperCase()}</AvatarFallback>
             </Avatar>
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-medium">{currentUser.username}</p>
-              <p className="truncate text-xs text-muted-foreground">{currentUser.role}</p>
+              <p className="truncate text-sm font-medium">{user.username}</p>
+              <p className="truncate text-xs text-muted-foreground">{user.role}</p>
             </div>
-            <Button variant="ghost" size="icon" asChild>
-              <a href="/login" aria-label="退出登录">
-                <LogOut className="size-4" />
-              </a>
+            <Button variant="ghost" size="icon" aria-label="退出登录" onClick={handleLogout}>
+              <LogOut className="size-4" />
             </Button>
           </div>
         </div>
@@ -105,8 +126,8 @@ export default function AppLayout() {
                 <p className="mt-1 text-xs text-muted-foreground">旅行社团队管理</p>
               </div>
             </div>
-            <Button variant="outline" size="sm" asChild>
-              <a href="/login">退出</a>
+            <Button variant="outline" size="sm" onClick={handleLogout}>
+              退出
             </Button>
           </div>
           <nav className="mt-3 flex gap-2 overflow-x-auto pb-1">

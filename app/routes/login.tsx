@@ -25,10 +25,9 @@ export default function Login() {
     try {
       const data = formDataToObject(event.currentTarget) as { username: string; password: string }
       await authApi.login(data)
-      navigate('/')
+      await navigate('/')
     } catch (error) {
       setError(error instanceof Error ? error.message : '登录失败')
-    } finally {
       setBusy(false)
     }
   }
